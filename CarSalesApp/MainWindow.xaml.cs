@@ -20,8 +20,7 @@ namespace CarSalesApp
                 Title = "Open XML File"
             };
 
-            bool? result = openFileDialog.ShowDialog();
-            if (result == true)
+            if (openFileDialog.ShowDialog() == true)
             {
                 try
                 {
@@ -31,7 +30,7 @@ namespace CarSalesApp
 
                     carsItemsControl.ItemsSource = salesSummary;
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show($"Failed to load XML file:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -42,13 +41,31 @@ namespace CarSalesApp
         {
             XDocument doc = XDocument.Load(filePath);
 
+
+
             return doc.Descendants("Car")
-                .Select(carNode => new Car
+                .Select(car =>
                 {
-                    Model = carNode.Element("Model")?.Value,
-                    SaleDate = DateTime.Parse(carNode.Element("SaleDate")?.Value),
-                    Price = double.Parse(carNode.Element("Price")?.Value),
-                    VAT = double.Parse(carNode.Element("VAT")?.Value)
+                    string? model = car.Element("Model")?.Value;
+                    string? saleDateValue = car.Element("SaleDate")?.Value;
+                    string? priceValue = car.Element("Price")?.Value;
+                    string? vatValue = car.Element("VAT")?.Value;
+
+                    if (string.IsNullOrWhiteSpace(model) ||
+                        !DateTime.TryParse(saleDateValue, out DateTime saleDate) ||
+                        !double.TryParse(priceValue, out double price) ||
+                        !double.TryParse(vatValue, out double vat))
+                    {
+                        throw new Exception("Invalid XML structure.");
+                    }
+
+                    return new Car
+                    {
+                        Model = model,
+                        SaleDate = saleDate,
+                        Price = price,
+                        VAT = vat
+                    };
                 })
                 .ToList();
         }
