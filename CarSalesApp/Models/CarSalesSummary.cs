@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CarSalesApp.Models
 {
-    class CarDataGrid
+    class CarSalesSummary
     {
         public string Model { get; set; }
         public double PriceWithoutVAT { get; set; }

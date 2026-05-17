@@ -12,7 +12,7 @@ namespace CarSalesApp
             InitializeComponent();
         }
 
-        private void loadXml_click(object sender, RoutedEventArgs e)
+        private void LoadXml_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -27,9 +27,9 @@ namespace CarSalesApp
                 {
                     List<Car> cars = LoadCars(openFileDialog.FileName);
 
-                    List<CarDataGrid> carsDataGrid = GetWeekendSales(cars);
+                    List<CarSalesSummary> carsDataGrid = GetWeekendSales(cars);
 
-                    xmlGrid.ItemsSource = carsDataGrid;
+                    carsItemsControl.ItemsSource = carsDataGrid;
                 }
                 catch (System.Exception ex)
                 {
@@ -53,14 +53,14 @@ namespace CarSalesApp
                 .ToList();
         }
 
-        private List<CarDataGrid> GetWeekendSales(List<Car> cars)
+        private List<CarSalesSummary> GetWeekendSales(List<Car> cars)
         {
             return cars
                 .Where(car =>
                     car.SaleDate.DayOfWeek == DayOfWeek.Saturday ||
                     car.SaleDate.DayOfWeek == DayOfWeek.Sunday)
                 .GroupBy(car => car.Model)
-                .Select(group => new CarDataGrid
+                .Select(group => new CarSalesSummary
                 {
                     Model = group.Key,
                     PriceWithoutVAT = group.Sum(car => car.Price),

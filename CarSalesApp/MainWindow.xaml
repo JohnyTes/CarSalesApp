@@ -5,15 +5,59 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CarSalesApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <DataGrid x:Name="xmlGrid" Margin="0,0,0,189" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Název modelu" Binding="{Binding Model}"/>
-                <DataGridTextColumn Header="Cena bez DPH" Binding="{Binding PriceWithoutVAT}"/>
-                <DataGridTextColumn Header="Cena s DPH" Binding="{Binding PriceWithVAT}"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Center" Margin="0,312,0,0" VerticalAlignment="Top" Click="loadXml_click"/>
+        Title="CarSalesApp" Height="450" Width="800">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Přehled víkendových prodejů:" Margin="0,0,0,5" FontWeight="Bold" FontSize="22"/>
+        <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="0,0,0,5" Grid.Row="1" CornerRadius="1" Background="#F0F0F0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Název modelu" FontWeight="Bold" FontSize="16" Grid.Column="0" Grid.Row="0"/>
+                <TextBlock Text="Cena bez DPH" Grid.Column="0" Grid.Row="1"/>
+                <TextBlock Text="Cena s DPH" Grid.Column="1" Grid.Row="1"/>
+            </Grid>
+        </Border>
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5">
+            <ItemsControl x:Name="carsItemsControl">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="0,0,0,5" CornerRadius="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Text="{Binding Model}" FontWeight="Bold" FontSize="16" Grid.Row="0"/>
+
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding PriceWithoutVAT, StringFormat='C'}" Grid.Column="0"/>
+                                    <TextBlock Text="{Binding PriceWithVAT, StringFormat='C'}" Grid.Column="1"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Button x:Name="loadXmlButton" Content="Načíst XML soubor" HorizontalAlignment="Center" VerticalAlignment="Top" Click="LoadXml_Click" Grid.Row="3" Width="180" Height="30"/>
     </Grid>
 </Window>
