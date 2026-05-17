@@ -23,41 +23,20 @@ namespace CarSalesApp
 
         private void loadXml_click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog
+            OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "XML files (*.xml)|*.xml",
                 Title = "Open XML File"
             };
 
-            bool? result = ofd.ShowDialog();
+            bool? result = openFileDialog.ShowDialog();
             if (result == true)
             {
                 try
                 {
-                    XmlDocument doc = new XmlDocument();
-                    doc.Load(ofd.FileName);
-                    List<Car> cars = doc.GetElementsByTagName("Car").Cast<XmlNode>()
-                           .Select(x => new Car
-                           {
-                               Model = x["Model"]?.InnerText,
-                               SaleDate = DateTime.Parse(x["SaleDate"]?.InnerText),
-                               Price = double.Parse(x["Price"]?.InnerText),
-                               VAT = double.Parse(x["VAT"]?.InnerText)
-                           })
-                           .ToList();
+                    List<Car> cars = LoadCars(openFileDialog.FileName);
 
-                    List<Car> weekendCars = cars
-                        .Where(car => car.SaleDate.DayOfWeek == DayOfWeek.Saturday || car.SaleDate.DayOfWeek == DayOfWeek.Sunday)
-                        .ToList();
-
-                    List<CarDataGrid> carsDataGrid = weekendCars.GroupBy(car => car.Model)
-                        .Select(x => new CarDataGrid
-                        {
-                            Model = x.Key,
-                            PriceWithoutVAT = x.Sum(car => car.Price),
-                            PriceWithVAT = x.Sum(car => car.Price * (1 + car.VAT / 100))
-                        })
-                        .ToList();
+                    List<CarDataGrid> carsDataGrid = GetWeekendSales(cars);
 
                     xmlGrid.ItemsSource = carsDataGrid;
                 }
@@ -66,6 +45,41 @@ namespace CarSalesApp
                     MessageBox.Show($"Failed to load XML file:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        private List<Car> LoadCars(string filePath)
+        {
+            XmlDocument doc = new XmlDocument();
+
+            doc.Load(filePath);
+
+            return doc.GetElementsByTagName("Car")
+                .Cast<XmlNode>()
+                .Select(carNode => new Car
+                {
+                    Model = carNode["Model"]?.InnerText,
+                    SaleDate = DateTime.Parse(carNode["SaleDate"]?.InnerText),
+                    Price = double.Parse(carNode["Price"]?.InnerText),
+                    VAT = double.Parse(carNode["VAT"]?.InnerText)
+                })
+                .ToList();
+        }
+
+        private List<CarDataGrid> GetWeekendSales(List<Car> cars)
+        {
+            return cars
+                .Where(car =>
+                    car.SaleDate.DayOfWeek == DayOfWeek.Saturday ||
+                    car.SaleDate.DayOfWeek == DayOfWeek.Sunday)
+                .GroupBy(car => car.Model)
+                .Select(group => new CarDataGrid
+                {
+                    Model = group.Key,
+                    PriceWithoutVAT = group.Sum(car => car.Price),
+                    PriceWithVAT = group.Sum(car =>
+                        car.Price * (1 + car.VAT / 100))
+                })
+                .ToList();
         }
     }
 }
