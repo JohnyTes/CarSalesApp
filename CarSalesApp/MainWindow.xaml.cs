@@ -27,9 +27,9 @@ namespace CarSalesApp
                 {
                     List<Car> cars = LoadCars(openFileDialog.FileName);
 
-                    List<CarSalesSummary> carsDataGrid = GetWeekendSales(cars);
+                    List<CarSalesSummary> salesSummary = GetWeekendSales(cars);
 
-                    carsItemsControl.ItemsSource = carsDataGrid;
+                    carsItemsControl.ItemsSource = salesSummary;
                 }
                 catch (System.Exception ex)
                 {
