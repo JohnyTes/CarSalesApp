@@ -1,16 +1,7 @@
 ﻿using CarSalesApp.Models;
 using Microsoft.Win32;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Xml;
+using System.Xml.Linq;
 
 namespace CarSalesApp
 {
@@ -49,18 +40,15 @@ namespace CarSalesApp
 
         private List<Car> LoadCars(string filePath)
         {
-            XmlDocument doc = new XmlDocument();
+            XDocument doc = XDocument.Load(filePath);
 
-            doc.Load(filePath);
-
-            return doc.GetElementsByTagName("Car")
-                .Cast<XmlNode>()
+            return doc.Descendants("Car")
                 .Select(carNode => new Car
                 {
-                    Model = carNode["Model"]?.InnerText,
-                    SaleDate = DateTime.Parse(carNode["SaleDate"]?.InnerText),
-                    Price = double.Parse(carNode["Price"]?.InnerText),
-                    VAT = double.Parse(carNode["VAT"]?.InnerText)
+                    Model = carNode.Element("Model")?.Value,
+                    SaleDate = DateTime.Parse(carNode.Element("SaleDate")?.Value),
+                    Price = double.Parse(carNode.Element("Price")?.Value),
+                    VAT = double.Parse(carNode.Element("VAT")?.Value)
                 })
                 .ToList();
         }
