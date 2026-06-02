@@ -32,7 +32,7 @@
             </Grid>
         </Border>
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5">
-            <ItemsControl x:Name="carsItemsControl">
+            <ItemsControl x:Name="carsItemsControl" ItemsSource="{Binding SalesSummary}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="0,0,0,5" CornerRadius="1">
@@ -58,6 +58,6 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Button x:Name="loadXmlButton" Content="Načíst XML soubor" HorizontalAlignment="Center" VerticalAlignment="Top" Click="LoadXml_Click" Grid.Row="3" Width="180" Height="30"/>
+        <Button x:Name="loadXmlButton" Content="Načíst XML soubor" Command="{Binding LoadXmlCommand}" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="3" Width="180" Height="30"/>
     </Grid>
 </Window>
