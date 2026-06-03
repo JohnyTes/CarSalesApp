@@ -12,17 +12,17 @@ using System.Xml.Linq;
 
 namespace CarSalesApp.ViewModels
 {
-    internal class MainWindowViewModel
+    public class MainWindowViewModel
     {
         public ObservableCollection<CarSalesSummary> SalesSummary { get; set; }
         public ICommand LoadXmlCommand { get; }
-        private XmlCarLoader loader;
-        private SalesCalculator calculator;
+        private ICarLoader loader;
+        private ISalesCalculator calculator;
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(ICarLoader loader,ISalesCalculator calculator)
         {
-            loader = new XmlCarLoader();
-            calculator = new SalesCalculator();
+            this.loader = loader;
+            this.calculator = calculator;
 
             SalesSummary = new ObservableCollection<CarSalesSummary>();
             LoadXmlCommand = new RelayCommand(LoadXml);

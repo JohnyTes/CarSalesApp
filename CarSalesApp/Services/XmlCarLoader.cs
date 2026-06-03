@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace CarSalesApp.Services
 {
-    internal class XmlCarLoader
+    public class XmlCarLoader : ICarLoader
     {
         public List<Car> Load(string filePath)
         {

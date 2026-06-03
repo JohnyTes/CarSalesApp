@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CarSalesApp.Services
 {
-    internal class SalesCalculator
+    public class SalesCalculator : ISalesCalculator
     {
         public List<CarSalesSummary> GetWeekendSales(List<Car> cars)
         {
