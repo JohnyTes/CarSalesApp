@@ -12,12 +12,30 @@ using System.Xml.Linq;
 
 namespace CarSalesApp.ViewModels
 {
-    public class MainWindowViewModel
+    public class MainWindowViewModel : ViewModelBase
     {
         public ObservableCollection<CarSalesSummary> SalesSummary { get; set; }
         public ICommand LoadXmlCommand { get; }
+
+        public ICommand SelectSummaryCommand { get; }
+
+        public CarSalesSummary? SelectedSummary
+        {
+            get => selectedSummary;
+            set
+            {
+                if (selectedSummary != value)
+                {
+                    selectedSummary = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private ICarLoader loader;
         private ISalesCalculator calculator;
+        private List<Car> loadedCars = new();
+        private CarSalesSummary? selectedSummary;
 
         public MainWindowViewModel(ICarLoader loader,ISalesCalculator calculator)
         {
@@ -25,7 +43,8 @@ namespace CarSalesApp.ViewModels
             this.calculator = calculator;
 
             SalesSummary = new ObservableCollection<CarSalesSummary>();
-            LoadXmlCommand = new RelayCommand(LoadXml);
+            LoadXmlCommand = new RelayCommand(_ => LoadXml());
+            SelectSummaryCommand = new RelayCommand(SelectSummary);
         }
 
         private void LoadXml()
@@ -40,9 +59,9 @@ namespace CarSalesApp.ViewModels
             {
                 try
                 {
-                    List<Car> cars = loader.Load(openFileDialog.FileName);
+                    loadedCars = loader.Load(openFileDialog.FileName);
 
-                    List<CarSalesSummary> salesSummary = calculator.GetWeekendSales(cars);
+                    List<CarSalesSummary> salesSummary = calculator.GetWeekendSales(loadedCars);
 
                     SalesSummary.Clear();
 
@@ -55,6 +74,15 @@ namespace CarSalesApp.ViewModels
                 {
                     MessageBox.Show($"Failed to load XML file:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+            }
+        }
+
+        private void SelectSummary(object? parameter)
+        {
+            if (parameter is CarSalesSummary summary)
+            {
+                SelectedSummary = summary;
+                MessageBox.Show(summary.Model, "Summary Details", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }

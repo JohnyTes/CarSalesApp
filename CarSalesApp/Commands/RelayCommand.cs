@@ -4,16 +4,19 @@ namespace CarSalesApp.Commands
 {
     internal class RelayCommand : ICommand
     {
-        private readonly Action _execute;
+        private readonly Action<object> _execute;
         public event EventHandler? CanExecuteChanged;
 
-        public RelayCommand(Action execute)
+        public RelayCommand(Action<object> execute)
         {
             _execute = execute;
         }
 
         public bool CanExecute(object? parameter) => true;
 
-        public void Execute(object? parameter) => _execute();
+        public void Execute(object? parameter)
+        {
+            _execute(parameter);
+        }
     }
 }
