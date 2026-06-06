@@ -16,7 +16,6 @@ namespace CarSalesApp.ViewModels
     {
         public ObservableCollection<CarSalesSummary> SalesSummary { get; set; }
         public ICommand LoadXmlCommand { get; }
-
         public ICommand SelectSummaryCommand { get; }
 
         public CarSalesSummary? SelectedSummary
@@ -34,13 +33,16 @@ namespace CarSalesApp.ViewModels
 
         private ICarLoader loader;
         private ISalesCalculator calculator;
+        private IWindowService windowService;
+
         private List<Car> loadedCars = new();
         private CarSalesSummary? selectedSummary;
 
-        public MainWindowViewModel(ICarLoader loader,ISalesCalculator calculator)
+        public MainWindowViewModel(ICarLoader loader,ISalesCalculator calculator, IWindowService windowService)
         {
             this.loader = loader;
             this.calculator = calculator;
+            this.windowService = windowService;
 
             SalesSummary = new ObservableCollection<CarSalesSummary>();
             LoadXmlCommand = new RelayCommand(_ => LoadXml());
@@ -82,7 +84,11 @@ namespace CarSalesApp.ViewModels
             if (parameter is CarSalesSummary summary)
             {
                 SelectedSummary = summary;
-                MessageBox.Show(summary.Model, "Summary Details", MessageBoxButton.OK, MessageBoxImage.Information);
+                List<Car> carsForModel = loadedCars
+                    .Where(car => car.Model == summary.Model)
+                    .ToList();
+
+                windowService.ShowDetailWindow(carsForModel);
             }
         }
     }

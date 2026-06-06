@@ -33,6 +33,7 @@ namespace CarSalesApp
             // Services
             services.AddSingleton<ICarLoader, XmlCarLoader>();
             services.AddSingleton<ISalesCalculator, SalesCalculator>();
+            services.AddTransient<IWindowService, WindowService>();
 
             // ViewModels
             services.AddSingleton<MainWindowViewModel>();
