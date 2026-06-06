@@ -45,11 +45,11 @@ namespace CarSalesApp.ViewModels
             this.windowService = windowService;
 
             SalesSummary = new ObservableCollection<CarSalesSummary>();
-            LoadXmlCommand = new RelayCommand(_ => LoadXml());
+            LoadXmlCommand = new RelayCommand(async _ => await LoadXml());
             SelectSummaryCommand = new RelayCommand(SelectSummary);
         }
 
-        private void LoadXml()
+        private async Task LoadXml()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -61,9 +61,9 @@ namespace CarSalesApp.ViewModels
             {
                 try
                 {
-                    loadedCars = loader.Load(openFileDialog.FileName);
+                    loadedCars = await Task.Run(() => loader.Load(openFileDialog.FileName));
 
-                    List<CarSalesSummary> salesSummary = calculator.GetWeekendSales(loadedCars);
+                    List<CarSalesSummary> salesSummary = await Task.Run(() => calculator.GetWeekendSales(loadedCars));
 
                     SalesSummary.Clear();
 
