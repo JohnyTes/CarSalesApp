@@ -1,8 +1,5 @@
-﻿using CarSalesApp.Models;
-using CarSalesApp.ViewModels;
-using Microsoft.Win32;
+﻿using CarSalesApp.ViewModels;
 using System.Windows;
-using System.Xml.Linq;
 
 namespace CarSalesApp
 {

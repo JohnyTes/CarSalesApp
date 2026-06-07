@@ -1,54 +1,36 @@
 ﻿using CarSalesApp.Commands;
 using CarSalesApp.Models;
 using CarSalesApp.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Windows;
-using System.Windows.Input;
-using System.Xml.Linq;
 
 namespace CarSalesApp.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public partial class MainWindowViewModel : ObservableObject
     {
         public ObservableCollection<CarSalesSummary> SalesSummary { get; set; }
-        public ICommand LoadXmlCommand { get; }
-        public ICommand SelectSummaryCommand { get; }
-
-        public CarSalesSummary? SelectedSummary
-        {
-            get => selectedSummary;
-            set
-            {
-                if (selectedSummary != value)
-                {
-                    selectedSummary = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
 
         private ICarLoader loader;
         private ISalesCalculator calculator;
         private IWindowService windowService;
 
         private List<Car> loadedCars = new();
+        [ObservableProperty]
         private CarSalesSummary? selectedSummary;
 
-        public MainWindowViewModel(ICarLoader loader,ISalesCalculator calculator, IWindowService windowService)
+        public MainWindowViewModel(ICarLoader loader, ISalesCalculator calculator, IWindowService windowService)
         {
             this.loader = loader;
             this.calculator = calculator;
             this.windowService = windowService;
 
             SalesSummary = new ObservableCollection<CarSalesSummary>();
-            LoadXmlCommand = new RelayCommand(async _ => await LoadXml());
-            SelectSummaryCommand = new RelayCommand(SelectSummary);
         }
 
+        [RelayCommand]
         private async Task LoadXml()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -79,6 +61,7 @@ namespace CarSalesApp.ViewModels
             }
         }
 
+        [RelayCommand]
         private void SelectSummary(object? parameter)
         {
             if (parameter is CarSalesSummary summary)

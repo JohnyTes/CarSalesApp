@@ -1,8 +1,5 @@
 ﻿using CarSalesApp.Models;
 using CarSalesApp.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 
 namespace CarSalesApp.Services

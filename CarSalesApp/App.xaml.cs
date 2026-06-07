@@ -1,8 +1,6 @@
 ﻿using CarSalesApp.Services;
 using CarSalesApp.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
-using System.Configuration;
-using System.Data;
 using System.Windows;
 
 namespace CarSalesApp
@@ -18,10 +16,10 @@ namespace CarSalesApp
             StartupEventArgs e)
         {
             var services = new ServiceCollection();
-            ConfigureServices(services);            
+            ConfigureServices(services);
             serviceProvider = services.BuildServiceProvider();
 
-            var mainWindow =  serviceProvider.GetRequiredService<MainWindow>();
+            var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
 
             mainWindow.Show();
 
@@ -42,7 +40,7 @@ namespace CarSalesApp
             services.AddSingleton<MainWindow>();
         }
 
-        protected override void OnExit( ExitEventArgs e)
+        protected override void OnExit(ExitEventArgs e)
         {
             serviceProvider?.Dispose();
             base.OnExit(e);

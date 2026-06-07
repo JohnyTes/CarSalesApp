@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CarSalesApp.Models
+﻿namespace CarSalesApp.Models
 {
     public class Car
     {
